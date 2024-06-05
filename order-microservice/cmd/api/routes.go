@@ -22,9 +22,15 @@ func (app *application) routes() http.Handler {
 	orderService := order.NewService(orderRepo)
 	orderHandler := order.NewHandler(orderService)
 
-	router.Handler(http.MethodGet, "/cart", wrapHandler(auth.AuthMiddleware(http.HandlerFunc(cartHandler.HandleCart))))
-	router.Handler(http.MethodPost, "/cart", wrapHandler(auth.AuthMiddleware(http.HandlerFunc(cartHandler.HandleCart))))
-	router.Handler(http.MethodPost, "/order", wrapHandler(auth.AuthMiddleware(http.HandlerFunc(orderHandler.HandleOrder))))
+	// Создаем gRPC клиента для микросервиса авторизации
+	authClient, err := auth.NewAuthClient("localhost:50051")
+	if err != nil {
+		app.logger.PrintFatal(err, nil)
+	}
+
+	router.Handler(http.MethodGet, "/cart", wrapHandler(auth.AuthMiddleware(http.HandlerFunc(cartHandler.HandleCart), authClient)))
+	router.Handler(http.MethodPost, "/cart", wrapHandler(auth.AuthMiddleware(http.HandlerFunc(cartHandler.HandleCart), authClient)))
+	router.Handler(http.MethodPost, "/order", wrapHandler(auth.AuthMiddleware(http.HandlerFunc(orderHandler.HandleOrder), authClient)))
 	router.Handler(http.MethodGet, "/v1/healthcheck", http.HandlerFunc(app.healthcheckHandler))
 
 	return app.recoverPanic(app.rateLimit(router))
