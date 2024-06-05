@@ -3,7 +3,7 @@ package data
 import (
 	"strings"
 
-	"github.com/nurtikaga/internal/validator"
+	"cloth-service/internal/validator"
 )
 
 type Filters struct {

@@ -10,7 +10,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/nurtikaga/internal/data"
+	"cloth-service/internal/data"
 
 	_ "github.com/lib/pq"
 )
