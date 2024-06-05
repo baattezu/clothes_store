@@ -1,0 +1,3 @@
+DROP TABLE orders IF EXISTS;
+DROP TABLE order_items IF EXISTS;
+DROP TABLE cart_items IF EXISTS;
