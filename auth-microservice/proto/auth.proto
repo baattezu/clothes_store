@@ -1,0 +1,89 @@
+syntax = "proto3";
+
+package auth;
+
+option go_package = "github.com/baattezu/clothes_store/auth-microservice";
+
+// User information message
+message UserInfo {
+  int64 id = 1;
+  string created_at = 2;
+  string updated_at = 3;
+  string name = 4;
+  string surname = 5;
+  string email = 6;
+  string password_hash = 7;
+  bool activated = 8;
+  int32 version = 9;
+  int32 permission = 10;
+}
+
+// Request and response messages
+message RegisterRequest {
+  string name = 1;
+  string surname = 2;
+  string email = 3;
+  string password = 4;
+}
+
+message RegisterResponse {
+  UserInfo user = 1;
+}
+
+message LoginRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  string token = 1;
+}
+
+message GetUserByEmailRequest {
+  string email = 1;
+}
+
+message GetUserByEmailResponse {
+  UserInfo user = 1;
+}
+
+message GetUserByIdRequest {
+  int64 id = 1;
+}
+
+message GetUserByIdResponse {
+  UserInfo user = 1;
+}
+
+message UpdateUserRequest {
+  UserInfo user = 1;
+}
+
+message UpdateUserResponse {
+  UserInfo user = 1;
+}
+
+message DeleteUserRequest {
+  int64 id = 1;
+}
+
+message DeleteUserResponse {
+  bool success = 1;
+}
+
+message GetAllUsersRequest {}
+
+message GetAllUsersResponse {
+  repeated UserInfo users = 1;
+}
+
+// Auth service definition
+service AuthService {
+  rpc RegisterUser (RegisterRequest) returns (RegisterResponse);
+  rpc LoginUser (LoginRequest) returns (LoginResponse);
+  rpc GetUserByEmail (GetUserByEmailRequest) returns (GetUserByEmailResponse);
+  rpc GetUserById (GetUserByIdRequest) returns (GetUserByIdResponse);
+  rpc UpdateUser (UpdateUserRequest) returns (UpdateUserResponse);
+  rpc DeleteUser (DeleteUserRequest) returns (DeleteUserResponse);
+  rpc GetAllUsers (GetAllUsersRequest) returns (GetAllUsersResponse);
+}
