@@ -9,6 +9,7 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
+	"order-microservice/internal/auth"
 	"order-microservice/internal/jsonlog"
 )
 
@@ -38,10 +39,11 @@ type config struct {
 }
 
 type application struct {
-	config config
-	logger *jsonlog.Logger
-	wg     sync.WaitGroup
-	db     *sqlx.DB
+	config     config
+	logger     *jsonlog.Logger
+	wg         sync.WaitGroup
+	db         *sqlx.DB
+	authClient *auth.AuthClient
 }
 
 func main() {
@@ -72,10 +74,16 @@ func main() {
 	defer db.Close()
 	logger.PrintInfo("database connection pool established", nil)
 
+	authClient, err := auth.NewAuthClient("localhost:50051")
+	if err != nil {
+		logger.PrintFatal(err, nil)
+	}
+
 	app := &application{
-		config: cfg,
-		logger: logger,
-		db:     db,
+		config:     cfg,
+		logger:     logger,
+		db:         db,
+		authClient: authClient,
 	}
 
 	err = app.serve()
