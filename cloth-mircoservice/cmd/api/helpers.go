@@ -10,8 +10,9 @@ import (
 	"strconv"
 	"strings"
 
+	"cloth-service/internal/validator"
+
 	"github.com/julienschmidt/httprouter"
-	"github.com/nurtikaga/internal/validator"
 )
 
 func (app *application) readIDParam(r *http.Request) (int64, error) {

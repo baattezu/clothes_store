@@ -1,0 +1,74 @@
+syntax = "proto3";
+
+package proto;
+option go_package = "github.com/github.com/baattezu/clothes_store/proto";
+
+service ClothService {
+  rpc CreateCloth (CreateClothRequest) returns (CreateClothResponse);
+  rpc GetCloth (GetClothRequest) returns (GetClothResponse);
+  rpc EditCloth (EditClothRequest) returns (EditClothResponse);
+  rpc DeleteCloth (DeleteClothRequest) returns (DeleteClothResponse);
+  rpc ListClothes (ListClothesRequest) returns (ListClothesResponse);
+}
+
+message CreateClothRequest {
+  string cloth_name = 1;
+  int32 cloth_cost = 2;
+  string cloth_size = 3;
+}
+
+message CreateClothResponse {
+  int32 id = 1;
+}
+
+message GetClothRequest {
+  int32 id = 1;
+}
+
+message GetClothResponse {
+  int32 id = 1;
+  string cloth_name = 2;
+  int32 cloth_cost = 3;
+  string cloth_size = 4;
+  string created_at = 5;
+  string updated_at = 6;
+  int32 version = 7;
+}
+
+message EditClothRequest {
+  int32 id = 1;
+  string cloth_name = 2;
+  int32 cloth_cost = 3;
+  string cloth_size = 4;
+}
+
+message EditClothResponse {
+  bool success = 1;
+}
+
+message DeleteClothRequest {
+  int32 id = 1;
+}
+
+message DeleteClothResponse {
+  bool success = 1;
+}
+
+message ListClothesRequest {
+  string cloth_name = 1;
+  string cloth_size = 2;
+  int32 page = 3;
+  int32 page_size = 4;
+  string sort = 5;
+}
+
+message ListClothesResponse {
+  repeated Cloth clothe_list = 1;
+}
+
+message Cloth {
+  int32 id = 1;
+  string cloth_name = 2;
+  int32 cloth_cost = 3;
+  string cloth_size = 4;
+}

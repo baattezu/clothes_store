@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/nurtikaga/internal/data"
-	"github.com/nurtikaga/internal/validator"
+	"cloth-service/internal/data"
+	"cloth-service/internal/validator"
 )
 
 func (app *application) createClotheHandler(w http.ResponseWriter, r *http.Request) {
