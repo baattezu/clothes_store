@@ -146,3 +146,10 @@ func (m DBModel) GetAll(module_name string, exam_type string, filters Filters) (
 	}
 	return module_info, nil
 }
+
+func NewMockModels() Models {
+	return Models{
+		Users:  UserModel(MockUserModel{}),
+		Tokens: TokenModel(MockTokenModel{}),
+	}
+}

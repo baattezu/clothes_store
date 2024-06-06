@@ -26,6 +26,7 @@ type UserInfo struct {
 	Version    int  `json:"-"`
 	Permission int  `json:"permission"`
 }
+
 type password struct {
 	plaintext *string
 	hash      []byte
@@ -330,4 +331,53 @@ func (m UserModel) GetAllCheck() ([]*UserInfo, error) {
 		return nil, err
 	}
 	return users, nil
+}
+
+type MockUserModel struct {
+	DB *sql.DB
+}
+
+func (m MockUserModel) Insert(user *UserInfo) error {
+	if user.Email == "admin@gmail.com" {
+		return ErrDuplicateEmail
+	}
+	return nil
+}
+
+func (m MockUserModel) GetByEmail(email string) (*UserInfo, error) {
+	passwd := "Qwerty1!"
+	hash, _ := bcrypt.GenerateFromPassword([]byte(passwd), 12)
+
+	if email == "admin@gmail.com" {
+		return &UserInfo{
+			ID:        1,
+			CreatedAt: time.Now(),
+			Name:      "Admin",
+			Email:     "admin@gmail.com",
+			Password:  password{&passwd, hash},
+			Activated: true,
+			Version:   1,
+		}, nil
+	}
+
+	return nil, ErrRecordNotFound
+}
+
+func (m MockUserModel) Update(user *UserInfo) error {
+	return nil
+}
+
+func (m MockUserModel) GetForToken(tokenScope, tokenPlaintext string) (*UserInfo, error) {
+	passwd := "Qwerty!"
+	hash, _ := bcrypt.GenerateFromPassword([]byte(passwd), 12)
+
+	return &UserInfo{
+		ID:        1,
+		CreatedAt: time.Now(),
+		Name:      "Admin",
+		Email:     "admin@gmail.com",
+		Password:  password{&passwd, hash},
+		Activated: true,
+		Version:   1,
+	}, nil
 }

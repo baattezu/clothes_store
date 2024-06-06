@@ -61,3 +61,13 @@ func (m PermissionModel) GetAllForUser(userID int64) (Permissions, error) {
 	}
 	return permissions, nil
 }
+
+type MockPermissionModel struct{}
+
+func (m MockPermissionModel) GetAllForUser(userID int64) (Permissions, error) {
+	return nil, nil
+}
+
+func (m MockPermissionModel) AddForUser(userID int64, codes ...string) error {
+	return nil
+}

@@ -134,3 +134,19 @@ func (m TokenModel) GetUser(userID int64) (*Token, error) {
 
 	return &token, nil
 }
+
+type MockTokenModel struct {
+	DB *sql.DB
+}
+
+func (m MockTokenModel) New(userID int64, ttl time.Duration, scope string) (*Token, error) {
+	return nil, nil
+}
+
+func (m MockTokenModel) Insert(token *Token) error {
+	return nil
+}
+
+func (m MockTokenModel) DeleteAllForUser(scope string, userID int64) error {
+	return nil
+}
