@@ -2,14 +2,14 @@ package auth
 
 import (
 	"context"
-	"order-microservice/internal/proto"
 	"time"
 
 	"google.golang.org/grpc"
+	pb "order-microservice/internal/proto"
 )
 
 type AuthClient struct {
-	client proto.AuthServiceClient
+	client pb.AuthServiceClient
 }
 
 func NewAuthClient(address string) (*AuthClient, error) {
@@ -17,17 +17,17 @@ func NewAuthClient(address string) (*AuthClient, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &AuthClient{client: proto.NewAuthServiceClient(conn)}, nil
+	return &AuthClient{client: pb.NewAuthServiceClient(conn)}, nil
 }
 
-func (c *AuthClient) ValidateToken(token string) (bool, error) {
+func (c *AuthClient) ValidateToken(token string) (bool, int64, string, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	req := &proto.ValidateTokenRequest{Token: token}
+	req := &pb.ValidateTokenRequest{Token: token}
 	resp, err := c.client.ValidateToken(ctx, req)
 	if err != nil {
-		return false, err
+		return false, 0, "", err
 	}
-	return resp.Valid, nil
+	return resp.Valid, resp.UserId, resp.Scope, nil
 }

@@ -7,7 +7,7 @@ import (
 	"log"
 	"net"
 
-	pb "cloth-mircoservice/proto"
+	pb "cloth-service/proto"
 
 	"google.golang.org/grpc"
 )
