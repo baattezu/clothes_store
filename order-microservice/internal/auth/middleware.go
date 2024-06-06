@@ -1,7 +1,9 @@
 package auth
 
 import (
+	"context"
 	"net/http"
+	"strings"
 )
 
 func AuthMiddleware(next http.Handler, authClient *AuthClient) http.Handler {
@@ -12,12 +14,17 @@ func AuthMiddleware(next http.Handler, authClient *AuthClient) http.Handler {
 			return
 		}
 
-		valid, err := authClient.ValidateToken(token)
+		token = strings.TrimPrefix(token, "Bearer ")
+
+		valid, userID, scope, err := authClient.ValidateToken(token)
 		if err != nil || !valid {
 			http.Error(w, "Invalid token", http.StatusUnauthorized)
 			return
 		}
 
-		next.ServeHTTP(w, r)
+		// Добавляем userID и scope в контекст запроса
+		ctx := context.WithValue(r.Context(), "userID", userID)
+		ctx = context.WithValue(ctx, "scope", scope)
+		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }

@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package auth;
 
-option go_package = "github.com/baattezu/clothes_store/auth-microservice";
+option go_package = "order-microservice/internal/auth";
 
 // User information message
 message UserInfo {
@@ -77,6 +77,17 @@ message GetAllUsersResponse {
   repeated UserInfo users = 1;
 }
 
+// Token validation messages
+message ValidateTokenRequest {
+  string token = 1;
+}
+
+message ValidateTokenResponse {
+  bool valid = 1;
+  int64 user_id = 2;
+  string scope = 3;
+}
+
 // Auth service definition
 service AuthService {
   rpc RegisterUser (RegisterRequest) returns (RegisterResponse);
@@ -86,4 +97,7 @@ service AuthService {
   rpc UpdateUser (UpdateUserRequest) returns (UpdateUserResponse);
   rpc DeleteUser (DeleteUserRequest) returns (DeleteUserResponse);
   rpc GetAllUsers (GetAllUsersRequest) returns (GetAllUsersResponse);
+
+  // Token validation method
+  rpc ValidateToken (ValidateTokenRequest) returns (ValidateTokenResponse);
 }
