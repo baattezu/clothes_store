@@ -65,7 +65,7 @@ func main() {
 
 func openDB(cfg config) (*sql.DB, error) {
 
-	db, err := sql.Open("postgres", os.Getenv("dsnClothes"))
+	db, err := sql.Open("postgres", "postgres://nurtileu:root@localhost/a.nurtileuDB?sslmode=disable")
 	if err != nil {
 		return nil, err
 	}
